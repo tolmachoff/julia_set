@@ -3,7 +3,7 @@ mod julia;
 use julia::Julia;
 
 use num::Complex;
-use image::Rgb;
+// use image::Rgb;
 
 pub struct Painter {
     width: u32,
@@ -39,21 +39,17 @@ impl Painter {
         (i as f64) / (self.height as f64) * (self.y0 - self.y1) + self.y1
     }
 
-    fn apply_palette(&self, n: u32) -> Rgb<u8> {
+    fn apply_palette(&self, n: u32) -> (u8, u8, u8) {
         if n == self.julia.n {
-            Rgb([255, 0, 0])
+            (255, 0, 0)
         }
         else {
-            let b: f64 = (1.0 - (n as f64) / ((self.julia.n - 1) as f64)) * 255.0;
-            Rgb([
-                b as u8,
-                b as u8,
-                b as u8
-            ])
+            let b = ((1.0 - (n as f64) / ((self.julia.n - 1) as f64)) * 255.0) as u8;
+            (b, b, b)
         }
     }
 
-    pub fn get_pixel(&self, i: u32, j: u32) -> Rgb<u8> {
+    pub fn get_pixel(&self, i: u32, j: u32) -> (u8, u8, u8) {
         let z = Complex {re: self.scale_x(i), im: self.scale_y(j)};
         let n = self.julia.calc(z);
         self.apply_palette(n)
