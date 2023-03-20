@@ -1,6 +1,6 @@
-#[path ="julia.rs"]
-mod julia;
-use julia::Julia;
+#[path ="mandelbrot.rs"]
+mod mandelbrot;
+use mandelbrot::Mandelbrot;
 
 use num::Complex;
 
@@ -11,7 +11,7 @@ pub struct Painter {
     x1: f64,
     y0: f64,
     y1: f64,
-    julia: Julia
+    fractal: Mandelbrot
 }
 
 impl Painter {
@@ -23,10 +23,7 @@ impl Painter {
             x1: 2.0,
             y0: -2.0,
             y1: 2.0, 
-            julia: Julia { 
-                c: Complex {re: -0.5076775431861811, im: -0.5738963531669857}, 
-                n: 128
-            } 
+            fractal: Mandelbrot { n: 128 } 
         }
     }
 
@@ -39,18 +36,18 @@ impl Painter {
     }
 
     fn apply_palette(&self, n: u32) -> (u8, u8, u8) {
-        if n == self.julia.n {
+        if n == self.fractal.n {
             (0, 0, 0)
         }
         else {
-            let b = ((n as f64) / ((self.julia.n - 1) as f64) * 255.0) as u8;
+            let b = ((n as f64) / ((self.fractal.n - 1) as f64) * 255.0) as u8;
             (b, b, 128 + b / 2)
         }
     }
 
     pub fn get_pixel(&self, i: u32, j: u32) -> (u8, u8, u8) {
         let z = Complex {re: self.scale_x(i), im: self.scale_y(j)};
-        let n = self.julia.calc(z);
+        let n = self.fractal.calc(z);
         self.apply_palette(n)
     }
 
