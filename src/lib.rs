@@ -26,4 +26,8 @@ impl PainterWrapper {
         res.set(2, JsValue::from(pixel.2));
         res
     }
+
+    pub fn resize(&mut self, i: u32, j: u32) {
+        self.painter.resize(i, j);
+    }
 }

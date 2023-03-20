@@ -14,24 +14,40 @@
 			async function wasm_run() {
 				await init();
 			
+				const WIDTH = 1000;
+				const HEIGHT = 1000;
+
 				const canvas = document.getElementById('canvas');
 				const ctx = canvas.getContext('2d');
 				
 				var painter = new Painter();
 				
-				var myImageData = ctx.createImageData(1000, 1000);
-				for (var j = 0; j < 1000; j++)
-				{
-					for (var i = 0; i < 1000; i++)
+				function draw_canvas() {
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					var myImageData = ctx.createImageData(WIDTH, HEIGHT);
+					for (var j = 0; j < HEIGHT; j++)
 					{
-						var pixel = painter.get_pixel(i, j);
-						myImageData.data[1000 * 4 * j + 4 * i + 0] = pixel[0];
-						myImageData.data[1000 * 4 * j + 4 * i + 1] = pixel[1];
-						myImageData.data[1000 * 4 * j + 4 * i + 2] = pixel[2];
-						myImageData.data[1000 * 4 * j + 4 * i + 3] = 255;
+						for (var i = 0; i < WIDTH; i++)
+						{
+							var pixel = painter.get_pixel(i, j);
+							myImageData.data[WIDTH * 4 * j + 4 * i + 0] = pixel[0];
+							myImageData.data[WIDTH * 4 * j + 4 * i + 1] = pixel[1];
+							myImageData.data[WIDTH * 4 * j + 4 * i + 2] = pixel[2];
+							myImageData.data[WIDTH * 4 * j + 4 * i + 3] = 255;
+						}
 					}
+					ctx.putImageData(myImageData, 0, 0);
 				}
-				ctx.putImageData(myImageData, 0, 0);
+				
+				draw_canvas();
+				
+				onclick = (event) => {
+					var rect = canvas.getBoundingClientRect();
+					var x = event.clientX - rect.left;
+					var y = event.clientY - rect.top;
+					painter.resize(x, y);
+					draw_canvas();
+				}
 			}
 			
 			wasm_run();

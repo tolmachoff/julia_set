@@ -3,7 +3,6 @@ mod julia;
 use julia::Julia;
 
 use num::Complex;
-// use image::Rgb;
 
 pub struct Painter {
     width: u32,
@@ -53,6 +52,18 @@ impl Painter {
         let z = Complex {re: self.scale_x(i), im: self.scale_y(j)};
         let n = self.julia.calc(z);
         self.apply_palette(n)
+    }
+
+    pub fn resize(&mut self, i: u32, j: u32) {
+        let x = self.scale_x(i);
+        let y = self.scale_y(j);
+        let x_dist = self.x1 - self.x0;
+        let y_dist = self.y1 - self.y0;
+        let scale = 0.75;
+        self.x0 = x - 0.5 * scale * x_dist;
+        self.x1 = x + 0.5 * scale * x_dist;
+        self.y0 = y - 0.5 * scale * y_dist;
+        self.y1 = y + 0.5 * scale * y_dist;
     }
 
     /*pub fn get_image(&self) -> RgbImage {
