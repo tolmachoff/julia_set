@@ -24,7 +24,7 @@ impl Painter {
             y0: -2.0,
             y1: 2.0, 
             julia: Julia { 
-                c: Complex {re: -0.74543, im: 0.11301}, 
+                c: Complex {re: -0.5076775431861811, im: -0.5738963531669857}, 
                 n: 128
             } 
         }
@@ -40,11 +40,11 @@ impl Painter {
 
     fn apply_palette(&self, n: u32) -> (u8, u8, u8) {
         if n == self.julia.n {
-            (255, 0, 0)
+            (0, 0, 0)
         }
         else {
-            let b = ((1.0 - (n as f64) / ((self.julia.n - 1) as f64)) * 255.0) as u8;
-            (b, b, b)
+            let b = ((n as f64) / ((self.julia.n - 1) as f64) * 255.0) as u8;
+            (b, b, 128 + b / 2)
         }
     }
 
