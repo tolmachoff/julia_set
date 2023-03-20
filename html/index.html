@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="UTF-8">
+        <title>Shit</title>
+	</head>
+	<body>
+		<div id="central_div">
+			<canvas id="canvas" width="1000" height="1000"></canvas>
+		</div>
+		<script type="module">
+			import init, {Painter} from "./julia_set.js"
+		
+			async function wasm_run() {
+				await init();
+			
+				const canvas = document.getElementById('canvas');
+				const ctx = canvas.getContext('2d');
+				
+				var painter = new Painter();
+				
+				var myImageData = ctx.createImageData(1000, 1000);
+				for (var j = 0; j < 1000; j++)
+				{
+					for (var i = 0; i < 1000; i++)
+					{
+						var pixel = painter.get_pixel(i, j);
+						myImageData.data[1000 * 4 * j + 4 * i + 0] = pixel[0];
+						myImageData.data[1000 * 4 * j + 4 * i + 1] = pixel[1];
+						myImageData.data[1000 * 4 * j + 4 * i + 2] = pixel[2];
+						myImageData.data[1000 * 4 * j + 4 * i + 3] = 255;
+					}
+				}
+				ctx.putImageData(myImageData, 0, 0);
+			}
+			
+			wasm_run();
+		</script>
+	</body>
+</html>
